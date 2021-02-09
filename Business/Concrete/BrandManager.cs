@@ -16,20 +16,7 @@ namespace Business.Concrete
         {
             _brandDal = brandDal;
         }
-        public void Add(Brand brand)
-        {
-            if (brand.BrandName.Length > 2)
-            {
-                _brandDal.Add(brand);
-                Console.WriteLine("Marka eklendi.");
-            }
-            else
-            {
-                Console.WriteLine($"Lütfen  ismin uzunluğunu 2 karakterden fazla giriniz. Marka ismi : {brand.BrandName}");
-            }
-
-
-        }
+       
 
         public void Delete(Brand brand)
         {
@@ -44,7 +31,7 @@ namespace Business.Concrete
 
         public Brand GetById(int id)
         {
-            return _brandDal.Get(c => c.BrandId == id);
+            return _brandDal.Get(c => c.Id == id);
         }
 
         public void Update(Brand brand)
