@@ -14,9 +14,5 @@ namespace DataAccess.Concrete.Repository
     public class EfBrandDal : EfEntityRepositoryBase<Brand, RentACarContext>, IBrandDal
     {
         
-
-       
-
-        
     }
 }

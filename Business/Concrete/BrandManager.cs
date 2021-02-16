@@ -1,5 +1,6 @@
 ﻿
 using Business.Abstract;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -16,35 +17,34 @@ namespace Business.Concrete
         {
             _brandDal = brandDal;
         }
-       
 
-        public void Delete(Brand brand)
+
+        public IResult Add(Brand brand)
+        {
+            _brandDal.Add(brand);
+            return new SuccessResult();
+        }
+
+        public IResult Delete(Brand brand)
         {
             _brandDal.Delete(brand);
-            Console.WriteLine("silindi.");
+            return new SuccessResult();
         }
 
-        public List<Brand> GetAll()
+        public IDataResult<List<Brand>> GetAll()
         {
-            return _brandDal.GetAll();
+            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll());
         }
 
-        public Brand GetById(int id)
+        public IDataResult<List<Brand>> GetById(int id)
         {
-            return _brandDal.Get(c => c.Id == id);
+            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(b => b.Id == id));
         }
 
-        public void Update(Brand brand)
+        public IResult Update(Brand brand)
         {
-            if (brand.BrandName.Length >= 2)
-            {
-                _brandDal.Update(brand);
-                Console.WriteLine("Güncellendi.");
-            }
-            else
-            {
-                Console.WriteLine($"marka isminin uzunluğunu 1 karakterden fazla giriniz.  marka ismi : {brand.BrandName}");
-            }
+            _brandDal.Update(brand);
+            return new SuccessResult();
         }
     }
 }
