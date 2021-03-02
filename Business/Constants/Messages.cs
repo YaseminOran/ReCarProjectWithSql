@@ -16,5 +16,7 @@ namespace Business.Constants
         public static string CarUpdate = "Seçili araba güncellenmiştir";
         public static string UserAdd = "Kullanıcı eklendi";
         public static string RentalInvalid = "Araç suan başka bir müsterinin kullanımındadır.";
+        public static string CarCountOfCategoryError = "Bir kategoride en fazla 10 ürün olabilir";
+        public static string CarNameAlreadyExists="Bu isimde zaten başka bir ürün var";
     }
 }

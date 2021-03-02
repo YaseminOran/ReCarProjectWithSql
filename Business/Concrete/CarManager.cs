@@ -3,12 +3,14 @@ using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Business.Concrete
@@ -24,8 +26,14 @@ namespace Business.Concrete
         [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
-            ValidationTool.Validate(new CarValidator(), car);
-            _carDal.Add(car);
+            IResult result= BusinessRules.Run(CheckIfCarNameExist(car.CarName), 
+                CheckIfCarCountOfCategoryCorrect(car.Id));
+            if (result!=null)
+            {
+                return result;
+            }
+            //ValidationTool.Validate(new CarValidator(), car);
+             _carDal.Add(car);
             return new SuccessResult(Messages.CarAdded);
         }
 
@@ -59,12 +67,36 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.ColorId == id));
         }
-
+        [ValidationAspect (typeof(CarValidator))]
         public IResult Update(Car car)
         {
+            
             _carDal.Update(car);
             return new SuccessResult(Messages.CarUpdate);
         }
+        private IResult CheckIfCarCountOfCategoryCorrect(int Id)
+        {
+            var result = _carDal.GetAll(p => p.Id == Id).Count;
+            if (result >= 10)
+            {
+                return new ErrorResult(Messages.CarCountOfCategoryError);
+            }
+
+            return new SuccessResult();
+        }
+        private IResult CheckIfCarNameExist(string carName)
+        {
+            var result = _carDal.GetAll(p =>p.CarName == carName).Any();
+            if (result)
+            {
+                return new ErrorResult(Messages.CarNameAlreadyExists);
+            }
+
+            return new SuccessResult();
+        }
     }
+
+  
+
 
 }
